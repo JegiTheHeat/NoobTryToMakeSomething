@@ -3,6 +3,12 @@
 #include <iostream>
 #include "mem.h"
 
+#define STATE_FIRSTTURN 0
+#define STATE_NEXTTURN 1
+#define ROTATE_LEFT 2
+#define ROTATE_RIGHT 1
+#define ROTATE_NONE 0
+
 DWORD tilt = 0x00C84FE0;
 DWORD strafe = 0x00C84FDC;
 class keyState
@@ -61,7 +67,6 @@ DWORD WINAPI HackThread(HMODULE hModule)
         key_d.update();
         key_numpad1.update();
 
-        key_a.print();
         if (key_numpad1.isPressed())
             b_rotate = !b_rotate;
         /*
