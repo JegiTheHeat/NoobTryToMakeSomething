@@ -5,6 +5,23 @@
 
 DWORD tilt = 0x00C84FE0;
 DWORD strafe = 0x00C84FDC;
+class keyState
+{
+    int key;
+    bool pressed;
+    public:
+    keyState(int key)
+        :key(key)
+    {}
+    bool isPressed()
+    {
+        return this->pressed;
+    }
+    void update()
+    {
+        this->pressed = GetAsyncKeyState(this->key);
+    }
+};
 
 DWORD WINAPI HackThread(HMODULE hModule)
 {
@@ -22,10 +39,81 @@ DWORD WINAPI HackThread(HMODULE hModule)
 
 	bool bTilt = true;
 	bool bStrafe = true;
+	
+	
+    	float * p_angle = (float *) 0x00C84FDC;
+    	int state = STATE_FIRSTTURN;
+    	int rotating_to = ROTATE_LEFT;
+    // register keys we want
+    	keyState key_a('A');
+    	keyState key_d('D');
+    	keyState key_numpad1(VK_NUMPAD1);
 
+    	bool b_rotate = true; // change if you want it to start disabled
+    	float rotate_increment = 1.1;
+    	float rotate_instant = 45.0;
 	while (true)
 	{
 		Sleep(1);
+		        /*
+            lets get the key states first
+            will refresh fast enough and we don't have to get them all the time
+        */
+
+        key_a.update();
+        key_d.update();
+        key_numpad1.update();
+
+        key_a.print();
+        if (key_numpad1.isPressed())
+            b_rotate = !b_rotate;
+        /*
+            intitial state:
+            STATE_FIRSTTURN : nothing happens till key is pressed
+            waiting if something triggers the rest of the sequence
+        */
+        if (b_rotate)
+        {
+            switch (state)
+            {
+            case STATE_FIRSTTURN:
+                if (key_a.isPressed())
+                {
+                    state = STATE_NEXTTURN;
+                    *p_angle -= 45;
+                    rotating_to = ROTATE_LEFT;
+                }
+                if (key_d.isPressed())
+                {
+                    state = STATE_NEXTTURN;
+                    *p_angle += 45;
+                    rotating_to = ROTATE_RIGHT;
+                }
+                break;
+            case STATE_NEXTTURN:
+                if (key_a.isPressed() && rotating_to == ROTATE_RIGHT)
+                {
+                    *p_angle -= 90;
+                    rotating_to = ROTATE_LEFT;
+                }
+                if (key_d.isPressed() && rotating_to == ROTATE_LEFT)
+                {
+                    *p_angle += 90;
+                    rotating_to = ROTATE_RIGHT;
+                }
+                break;
+            default:
+                break;
+            }
+            if(rotating_to != ROTATE_NONE)
+            {
+                if (rotating_to == ROTATE_LEFT && key_a.isPressed())
+                    *p_angle -= rotate_increment;
+                if (rotating_to == ROTATE_RIGHT && key_d.isPressed())
+                    *p_angle += rotate_increment;
+            }
+        }
+/*		
 		if (GetAsyncKeyState('A') && GetAsyncKeyState(VK_SHIFT) && bTilt == true)
 		{
 			*(float*)tilt = 90;
@@ -51,6 +139,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
 		Sleep(1);
 		if (GetAsyncKeyState(VK_NUMPAD2) & 1)
 			bStrafe = !bStrafe;
+*/
 	}
 
 	fclose(f);
