@@ -53,7 +53,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
     	keyState key_numpad1(VK_NUMPAD1);
 
     	bool b_rotate = true; // change if you want it to start disabled
-    	float rotate_increment = 1.1;
+    	float rotate_increment = 0.01;
     	float rotate_instant = 45.0;
 	while (true)
 	{
@@ -82,25 +82,25 @@ DWORD WINAPI HackThread(HMODULE hModule)
                 if (key_a.isPressed())
                 {
                     state = STATE_NEXTTURN;
-                    *p_angle -= 45;
+                    *p_angle += 45;
                     rotating_to = ROTATE_LEFT;
                 }
                 if (key_d.isPressed())
                 {
                     state = STATE_NEXTTURN;
-                    *p_angle += 45;
+                    *p_angle -= 45;
                     rotating_to = ROTATE_RIGHT;
                 }
                 break;
             case STATE_NEXTTURN:
                 if (key_a.isPressed() && rotating_to == ROTATE_RIGHT)
                 {
-                    *p_angle -= 90;
+                    *p_angle += 90;
                     rotating_to = ROTATE_LEFT;
                 }
                 if (key_d.isPressed() && rotating_to == ROTATE_LEFT)
                 {
-                    *p_angle += 90;
+                    *p_angle -= 90;
                     rotating_to = ROTATE_RIGHT;
                 }
                 break;
@@ -110,9 +110,9 @@ DWORD WINAPI HackThread(HMODULE hModule)
             if(rotating_to != ROTATE_NONE)
             {
                 if (rotating_to == ROTATE_LEFT && key_a.isPressed())
-                    *p_angle -= rotate_increment;
-                if (rotating_to == ROTATE_RIGHT && key_d.isPressed())
                     *p_angle += rotate_increment;
+                if (rotating_to == ROTATE_RIGHT && key_d.isPressed())
+                    *p_angle -= rotate_increment;
             }
         }
 
