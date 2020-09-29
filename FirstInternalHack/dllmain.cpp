@@ -37,10 +37,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	//calling it with NULL also gives you the address of the .exe module
 	moduleBase = (uintptr_t)GetModuleHandle(NULL);
 
-	bool bTilt = true;
-	bool bStrafe = true;
-	
-	
+
     	float * p_angle = (float *) 0x00C84FDC;
     	int state = STATE_FIRSTTURN;
     	int rotating_to = ROTATE_LEFT;
@@ -113,33 +110,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
                     *p_angle += rotate_increment;
             }
         }
-/*		
-		if (GetAsyncKeyState('A') && GetAsyncKeyState(VK_SHIFT) && bTilt == true)
-		{
-			*(float*)tilt = 90;
-		}
-		else if (GetAsyncKeyState('D') && GetAsyncKeyState(VK_SHIFT) && bTilt == true)
-		{
-			*(float*)tilt = -90;
-		}
-		else if (GetAsyncKeyState(VK_SPACE) && bTilt == true)
-		{
-			*(float*)tilt = 0;
-		}
 
-		//bTilt 
-		if (GetAsyncKeyState(VK_NUMPAD3) & 1)
-		{
-			bTilt = !bTilt; // toggles it on and off
-		}
-	}	
-
-		//bStrafe
-	{
-		Sleep(1);
-		if (GetAsyncKeyState(VK_NUMPAD2) & 1)
-			bStrafe = !bStrafe;
-*/
 	}
 
 	fclose(f);
