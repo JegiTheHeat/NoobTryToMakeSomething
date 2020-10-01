@@ -43,7 +43,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
     FILE* f;
     freopen_s(&f, "CONOUT$", "w", stdout);
 
-    std::cout << "Lex is OP, Jegi still learning.\n";
+    std::cout << "Jegi is saying Hello.\n";
     std::cout << "Press Numpad1 for BrokenBot.\n";
     std::cout << "Press Numpad2 for Tilt.\n";
 
