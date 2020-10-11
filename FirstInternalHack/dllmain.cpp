@@ -36,7 +36,7 @@ DWORD WINAPI HackThread(HMODULE hModule)
 	FILE* f;
 	freopen_s(&f, "CONOUT$", "w", stdout);
 
-	std::cout << "Lefty Lex is king, Yes you are, Jegi approves!\n"; 
+	std::cout << "Jegi said Hi!\n"; 
 
 	uintptr_t moduleBase = (uintptr_t)GetModuleHandle(L"iw3mp.exe");
 
